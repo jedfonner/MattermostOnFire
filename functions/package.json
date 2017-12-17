@@ -1,0 +1,19 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencyNotes:": {
+    "note": "Do not update firebase-admin higher than v5.4.2 nor firebase-functions higher than v0.7.1 otherwise it will break the ability to mock the firebase.admin.database."
+  },
+  "dependencies": {
+    "firebase-admin": "5.4.2",
+    "firebase-functions": "0.7.1"
+  },
+  "private": true,
+  "devDependencies": {
+    "jest": "^21.2.1"
+  },
+  "scripts": {
+    "test": "jest '.*\\.spec\\.js'; exit 0",
+    "test:watch": "jest --watch"
+  }
+}
