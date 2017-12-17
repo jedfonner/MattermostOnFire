@@ -3,9 +3,12 @@ const admin = require('firebase-admin');
 const utils = require('./utils');
 
 admin.initializeApp(functions.config().firebase);
-// https://firebase.google.com/docs/functions/write-firebase-functions
-// const BASE_URL = 'https://us-central1-mattermostonfire.cloudfunctions.net';
 
+/**
+ * Mattermost slash command integration endpoint
+ * Creates a new poll in the database and returns markup
+ * for showing the poll in Mattermost
+ */
 exports.slashStart = functions.https.onRequest((req, res) => {
   console.log('Received body: ', req.body);
   /*
@@ -21,11 +24,9 @@ exports.slashStart = functions.https.onRequest((req, res) => {
     user_name: 'jed.fonner'
   }
   */
-  // console.log('Received headers: ', req.headers);
   if (!utils.isValidSlashRequest(req)) {
     return res.status(401).send('Invalid request or missing token');
   }
-  // const re = /\s*,\s*/;
   const textPieces = req.body.text ? req.body.text.split("|") : [];
   if (textPieces.length <= 1) {
     console.warn('Did not find valid text, returning');
@@ -61,7 +62,6 @@ exports.slashStart = functions.https.onRequest((req, res) => {
   .then(() => newPollRef.child('options').once('value'))
   .then(snapshot => {
     const optionData = snapshot.val();
-    // console.log('Operating on new poll options', optionData);
     let attachmentActions = [];
     const optionKeys = optionData ? Object.keys(optionData): [];
     for (const optionKey of optionKeys) {
@@ -88,6 +88,10 @@ exports.slashStart = functions.https.onRequest((req, res) => {
   })
 });
 
+/**
+ * Handles clicks by users on poll option buttons
+ * This endpoint is attached to each option action returned by `slashStart`
+ */
 exports.slashVote = functions.https.onRequest((req, res) => {
   console.log('Received body: ', req.body);
   if (!utils.isValidActionRequest(req)) {
@@ -161,6 +165,11 @@ exports.slashVote = functions.https.onRequest((req, res) => {
   })
 });
 
+/**
+ * Deactivates a poll and updates the original poll message with the results
+ * This endpoint is attached to the "Close Poll" action button
+ * Only returns the summary if triggered by the poll creator
+ */
 exports.slashEnd = functions.https.onRequest((req, res) => {
   console.log('Received body: ', req.body);
   if (!utils.isValidActionRequest(req)) {
@@ -195,6 +204,11 @@ exports.slashEnd = functions.https.onRequest((req, res) => {
   });
 });
 
+/**
+ * Returns the current poll summary as an ephemeral message
+ * This endpoint is attached to the "Get Vote Count" action button
+ * Only returns the summary if triggered by the poll creator
+ */
 exports.slashCount = functions.https.onRequest((req, res) => {
   console.log('Received body: ', req.body);
   if (!utils.isValidActionRequest(req)) {
@@ -224,9 +238,13 @@ exports.slashCount = functions.https.onRequest((req, res) => {
   });
 })
 
+/**
+ * Cleans up inactive polls created more than 90 days ago
+ * Triggered by each new poll creation
+ */
 exports.slashCleanup = functions.database.ref('/polls/{newPollKey}').onCreate(event => {
   const createdTimestamp = new Date(event.timestamp);
-  const removeBeforeTimestamp = new Date(createdTimestamp-1000*60*60*24*90); // 3 months old
+  const removeBeforeTimestamp = new Date(createdTimestamp-1000*60*60*24*90); // 90 days old
   var pollsRef = admin.database().ref('/polls');
   return pollsRef
     .orderByChild('createdAt')
