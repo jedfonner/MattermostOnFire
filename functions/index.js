@@ -7,7 +7,6 @@ admin.initializeApp(functions.config().firebase);
 // const BASE_URL = 'https://us-central1-mattermostonfire.cloudfunctions.net';
 
 exports.slashStart = functions.https.onRequest((req, res) => {
-  console.log('Token from env: ', functions.config().mattermost.token);
   console.log('Received body: ', req.body);
   /*
   { channel_id: 'qh5bjpmjcfyfjfegj5itb1g99y',
@@ -223,4 +222,30 @@ exports.slashCount = functions.https.onRequest((req, res) => {
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
   });
+})
+
+exports.slashCleanup = functions.database.ref('/polls/{newPollKey}').onCreate(event => {
+  const createdTimestamp = new Date(event.timestamp);
+  const removeBeforeTimestamp = new Date(createdTimestamp-1000*60*60*24*90); // 3 months old
+  var pollsRef = admin.database().ref('/polls');
+  return pollsRef
+    .orderByChild('createdAt')
+    .endAt(removeBeforeTimestamp.toISOString())
+    .once('value')
+    .then(snapshot => {
+      const promiseArr = [];
+      const oldPolls = snapshot.val();
+      const oldPollKeys = oldPolls ? Object.keys(oldPolls) : [];
+      for (const oldPollKey of oldPollKeys) {
+        const oldPoll = oldPolls[oldPollKey];
+        if (oldPoll.isActive) {
+          console.log(`Old poll ${oldPollKey} is still active so not removing`, oldPoll);
+        } else {
+          console.info(`Removing old poll ${oldPollKey}`, oldPoll);
+          const removeRef = admin.database().ref('/polls').child(oldPollKey);
+          promiseArr.push(removeRef.remove());
+        }
+      }
+      return Promise.all(promiseArr);
+    });
 })
