@@ -1,6 +1,14 @@
 # MattermostOnFire
 Mattermost Slash Commands Using Firebase
 
+## What does this do?
+Watch the video:
+
+[![Demo](http://img.youtube.com/vi/PdxepG_h0Xs/0.jpg)](http://www.youtube.com/watch?v=PdxepG_h0Xs "Mattermost on Fire Demo")
+
+## How does it work?
+![Diagram](/info/diagram.png "MattermostonFire Diagram")
+
 ## Set up
 0. Deploy this project to Firebase ([more info](https://firebase.google.com/docs/functions/get-started#set_up_and_initialize_functions_sdk))
 1. Create a new Slash command in Mattermost
@@ -21,3 +29,7 @@ Mattermost Slash Commands Using Firebase
   }
 }
 ```
+
+## Developing
+### Tests
+1. Run `npm run test` in the _functions_ directory to ensure that your changes haven't broken any of the functions.
