@@ -1,5 +1,5 @@
 # MattermostOnFire
-Mattermost Slash Commands Using Firebase
+Backend code for powering a Mattermost [slash command](https://docs.mattermost.com/developer/slash-commands.html) that creates an interactive poll. Contains Firebase Cloud Functions that connect [Mattermost Interactive Buttons](https://docs.mattermost.com/developer/interactive-message-buttons.html) with the Firebase Realtime Database.
 
 ## What does this do?
 Watch the video:
@@ -11,7 +11,7 @@ Watch the video:
 
 ## Set up
 0. Deploy this project to Firebase ([more info](https://firebase.google.com/docs/functions/get-started#set_up_and_initialize_functions_sdk))
-1. Create a new Slash command in Mattermost
+1. Create a new Slash command in Mattermost called "poll" or "survey"
 2. For Request URL, set the URL of your Firebase Functions `slashStart` function (originall: https://us-central1-mattermostonfire.cloudfunctions.net/slashStart)
 3. Select "POST" for Request Method
 4. Fill out the rest of the Slash command configuration as you please, then save
