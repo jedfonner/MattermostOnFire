@@ -1,4 +1,6 @@
 # MattermostOnFire
+[![Build Status](https://travis-ci.org/jedfonner/MattermostOnFire.svg?branch=master)](https://travis-ci.org/jedfonner/MattermostOnFire)
+
 Backend code for powering a Mattermost [slash command](https://docs.mattermost.com/developer/slash-commands.html) that creates an interactive poll. Contains Firebase Cloud Functions that connect [Mattermost Interactive Buttons](https://docs.mattermost.com/developer/interactive-message-buttons.html) with the Firebase Realtime Database.
 
 ## What does this do?
