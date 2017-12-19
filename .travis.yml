@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+  - "node"
+cache:
+  directories:
+    - "functions/node_modules"
+script: cd functions && npm install && npm run test
