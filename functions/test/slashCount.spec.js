@@ -31,7 +31,7 @@ describe('slashEnd', () => {
         expect(code).toEqual(401);
         return {
           send: jest.fn(text => {
-            expect(text).not.toBeNull();
+            expect(text).toMatchSnapshot();
             done();
           })
         };
@@ -48,7 +48,7 @@ describe('slashEnd', () => {
         expect(code).toEqual(401);
         return {
           send: jest.fn(text => {
-            expect(text).not.toBeNull();
+            expect(text).toMatchSnapshot();
             done();
           })
         };
@@ -77,10 +77,7 @@ describe('slashEnd', () => {
         return {
           send: jest.fn(responseObject => {
             expect(refMock).toHaveBeenCalled();
-            expect(responseObject).toMatchObject({
-              ephemeral_text:
-                'Unable to get vote count for poll. Only the poll creator can get the vote count. Please ask @jed.fonner if you need the count.'
-            });
+            expect(responseObject).toMatchSnapshot();
             done();
           })
         };
@@ -108,11 +105,7 @@ describe('slashEnd', () => {
         return {
           send: jest.fn(responseObject => {
             expect(refMock).toHaveBeenCalled();
-            expect(responseObject).toMatchObject(
-              expect.objectContaining({
-                ephemeral_text: expect.any(String)
-              })
-            );
+            expect(responseObject).toMatchSnapshot();
             done();
           })
         };

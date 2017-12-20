@@ -20,72 +20,65 @@ functions.config = jest.fn(() => ({
     storageBucket: 'not-a-project.appspot.com'
   }
 }));
-
+const utils = require('../utils');
 const myFunctions = require('../index');
 
 /* Tests */
 describe('slashStart', () => {
   let refMock;
-  let totalMockCalls = 0;
+  let newOptionsRefMock;
+  let newPollData;
+  let options = [];
   beforeEach(() => {
     // Custom admin database mock for testing the slashStart function
-    refMock = jest.fn(location => {
-      let callIndex = 0;
-      return {
-        push: jest.fn(() => {
-          totalMockCalls++;
-          callIndex++;
-          // console.log(`${location} ${callIndex}: Mock push()ing data, returning new refMock`);
-          return refMock(`${location} new data`);
-        }),
-        set: jest.fn(data => {
-          totalMockCalls++;
-          callIndex++;
-          // console.log(`${location} ${callIndex}: Mock set()ing data:`, data);
-          const snapshotMock = {
-            ref: location,
-            val: jest.fn(() => {
-              totalMockCalls++;
-              return data;
-            })
-          };
-          return Promise.resolve(snapshotMock);
-        }),
-        child: jest.fn(childName => {
-          totalMockCalls++;
-          callIndex++;
-          // console.log(`${location} ${callIndex}: Mock child(), returning new refMock:`, childName);
-          return refMock(childName);
-        }),
-        once: jest.fn(eventName => {
-          totalMockCalls++;
-          callIndex++;
-          // console.log(`${location} ${callIndex}: Mock once()ing eventName:`, eventName);
-          const snapshotMock = {
-            val: jest.fn(() => {
-              totalMockCalls++;
-              return null;
-            })
-          };
-          return Promise.resolve(snapshotMock);
-        })
-      }
-    });
+    newOptionsRefMock = jest.fn(() => ({
+      set: jest.fn(data => {
+        options.push(data);
+      })
+    }));
+    let allOptionsRef = {
+      push: newOptionsRefMock,
+      once: jest.fn(event => {
+        const snapshotMock = {
+          ref: '/polls/options',
+          val: jest.fn(() => {
+            return options;
+          })
+        };
+        return Promise.resolve(snapshotMock);
+      })
+    };
+    let newPollRefMock = jest.fn(data => ({
+      set: jest.fn(data => {
+        newPollData = data;
+        const snapshotMock = {
+          ref: '/polls',
+          val: jest.fn(() => {
+            return data;
+          })
+        };
+        return Promise.resolve(snapshotMock);
+      }),
+      child: jest.fn(location => {
+        if (location === 'options') {
+          return allOptionsRef;
+        }
+      })
+    }));
 
+    refMock = jest.fn(location => ({push: newPollRefMock}));
     admin.database = jest.fn(() => ({ref: refMock}))
   });
 
   test('missing token', done => {
-    let mockRequest = {
-      body: Object.assign({}, VALID_START_REQUEST_BODY)
-    };
+    let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     delete mockRequest.body.token;
     const mockResponse = {
       status: (code) => {
         expect(code).toEqual(401);
         return {
           send: jest.fn(text => {
-            expect(text).not.toBeNull();
+            expect(text).toMatchSnapshot();
             expect(refMock).not.toHaveBeenCalled();
             done();
           })
@@ -96,16 +89,14 @@ describe('slashStart', () => {
   });
 
   test('invalid token', done => {
-    let mockRequest = {
-      body: Object.assign({}, VALID_START_REQUEST_BODY)
-    };
+    let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     mockRequest.body.token = 'invalid token';
     const mockResponse = {
       status: (code) => {
         expect(code).toEqual(401);
         return {
           send: jest.fn(text => {
-            expect(text).not.toBeNull();
+            expect(text).toMatchSnapshot();
             expect(refMock).not.toHaveBeenCalled();
             done();
           })
@@ -116,9 +107,7 @@ describe('slashStart', () => {
   });
 
   test('bad text', done => {
-    let mockRequest = {
-      body: Object.assign({}, VALID_START_REQUEST_BODY)
-    };
+    let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     mockRequest.body.text = 'invalid text';
 
     const mockResponse = {
@@ -127,9 +116,7 @@ describe('slashStart', () => {
         expect(code).toEqual(200);
         return {
           send: jest.fn(responseObject => {
-            expect(responseObject).toMatchObject({
-              response_type: 'ephemeral'
-            });
+            expect(responseObject).toMatchSnapshot();
             expect(refMock).not.toHaveBeenCalled();
             done();
           })
@@ -140,9 +127,7 @@ describe('slashStart', () => {
   })
 
   test('valid poll start', done => {
-    let mockRequest = {
-      body: Object.assign({}, VALID_START_REQUEST_BODY)
-    };
+    let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     const mockResponse = {
       set: jest.fn(),
       status: (code) => {
@@ -151,14 +136,9 @@ describe('slashStart', () => {
           send: jest.fn(json => {
             console.info('JSON:', json);
             const responseObject = JSON.parse(json);
-            expect(responseObject).toMatchObject({
-              response_type: 'in_channel'
-            });
-            expect(totalMockCalls).toEqual(14);
-            expect(refMock).toHaveBeenCalledWith('/polls');
-            expect(refMock).toHaveBeenCalledWith('/polls new data');
-            expect(refMock).toHaveBeenCalledWith('options');
-            expect(refMock).toHaveBeenCalledWith('options new data');
+            expect(refMock).toHaveBeenCalledTimes(1);
+            expect(newOptionsRefMock).toHaveBeenCalledTimes(3); //sample data has 3 actions
+            expect(responseObject).toMatchSnapshot();
             done();
           })
         }

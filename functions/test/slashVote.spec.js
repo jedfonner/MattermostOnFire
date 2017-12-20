@@ -79,9 +79,7 @@ describe('slashVote', () => {
           send: jest.fn(responseObject => {
             expect(refMock).toHaveBeenCalled();
             console.log('iniside mockResponse got responseObject:', responseObject)
-            expect(responseObject).toMatchObject({
-              ephemeral_text: 'Your vote could not be recorded. This poll has ended.'
-            });
+            expect(responseObject).toMatchSnapshot();
             done();
           })
         }
@@ -139,9 +137,7 @@ describe('slashVote', () => {
           send: jest.fn(responseObject => {
             expect(refMock).toHaveBeenCalled();
             console.log('iniside mockResponse got responseObject:', responseObject)
-            expect(responseObject).toMatchObject({
-              ephemeral_text: 'Thanks for voting. Your vote for **_Yes_** has been recorded. '
-            });
+            expect(responseObject).toMatchSnapshot();
             expect(newVoteSetMock).toHaveBeenCalledTimes(1);
             expect(transactionMock).toHaveBeenCalledTimes(1);
             done();
@@ -188,10 +184,7 @@ describe('slashVote', () => {
         return { send: jest.fn(responseObject => {
             expect(refMock).toHaveBeenCalled();
             console.log('iniside mockResponse got responseObject:', responseObject);
-            expect(responseObject).toMatchObject({
-              ephemeral_text:
-                'Thanks for voting. Your previous vote for **_Yes_** has been replaced. Your vote for **_No_** has been recorded. '
-            });
+            expect(responseObject).toMatchSnapshot();
             expect(newVoteSetMock).toHaveBeenCalledTimes(1);
             expect(decrementTransactionMock).toHaveBeenCalledTimes(1);
             expect(incrementTransactionMock).toHaveBeenCalledTimes(1);

@@ -14,6 +14,7 @@
   },
   "scripts": {
     "test": "jest '.*\\.spec\\.js'; exit 0",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:update": "jest -u"
   }
 }

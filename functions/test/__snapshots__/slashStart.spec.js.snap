@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`slashStart bad text 1`] = `
+Object {
+  "response_type": "ephemeral",
+  "text": "Please ceate a poll using the following format: /poll Poll Name | Option 1 | Option2 | ... | OptionN.",
+}
+`;
+
+exports[`slashStart invalid token 1`] = `"Invalid request or missing token"`;
+
+exports[`slashStart missing token 1`] = `"Invalid request or missing token"`;
+
+exports[`slashStart valid poll start 1`] = `
+Object {
+  "attachments": Array [
+    Object {
+      "actions": Array [
+        Object {
+          "color": "yellow",
+          "integration": Object {
+            "context": Object {
+              "optionKey": "0",
+              "token": "abcdefghijklmnopqrstuvxyz",
+            },
+            "url": "https://example.com/slashVote",
+          },
+          "name": "🖐️ action1",
+        },
+        Object {
+          "color": "yellow",
+          "integration": Object {
+            "context": Object {
+              "optionKey": "1",
+              "token": "abcdefghijklmnopqrstuvxyz",
+            },
+            "url": "https://example.com/slashVote",
+          },
+          "name": "🖐️ action2",
+        },
+        Object {
+          "color": "yellow",
+          "integration": Object {
+            "context": Object {
+              "optionKey": "2",
+              "token": "abcdefghijklmnopqrstuvxyz",
+            },
+            "url": "https://example.com/slashVote",
+          },
+          "name": "🖐️ action3",
+        },
+        Object {
+          "color": null,
+          "integration": Object {
+            "context": Object {
+              "optionKey": null,
+              "token": "abcdefghijklmnopqrstuvxyz",
+            },
+            "url": "https://example.com/slashCount",
+          },
+          "name": "🔍 Get Vote Count",
+        },
+        Object {
+          "color": null,
+          "integration": Object {
+            "context": Object {
+              "optionKey": null,
+              "token": "abcdefghijklmnopqrstuvxyz",
+            },
+            "url": "https://example.com/slashEnd",
+          },
+          "name": "🏁 Close Poll",
+        },
+      ],
+      "title": "poll name",
+    },
+  ],
+  "response_type": "in_channel",
+}
+`;

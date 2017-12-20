@@ -31,7 +31,7 @@ describe('slashEnd', () => {
         expect(code).toEqual(401);
         return {
           send: jest.fn(text => {
-            expect(text).not.toBeNull();
+            expect(text).toMatchSnapshot();
             done();
           }),
         };
@@ -48,7 +48,7 @@ describe('slashEnd', () => {
         expect(code).toEqual(401);
         return {
           send: jest.fn(text => {
-            expect(text).not.toBeNull();
+            expect(text).toMatchSnapshot();
             done();
           })
         };
@@ -77,10 +77,7 @@ describe('slashEnd', () => {
         return {
           send: jest.fn(responseObject => {
             expect(refMock).toHaveBeenCalled();
-            console.log('iniside mockResponse got responseObject:', responseObject)
-            expect(responseObject).toMatchObject({
-              ephemeral_text: 'Unable to close the poll. Only the poll creator can close a poll. Please ask @jed.fonner to close it.'
-            });
+            expect(responseObject).toMatchSnapshot();
             done();
           })
         }
@@ -99,7 +96,7 @@ describe('slashEnd', () => {
         return Promise.resolve(snapshotMock);
       }),
       update: jest.fn(partialUpdate => {
-        expect(partialUpdate).toMatchObject({isActive: false})
+        expect(partialUpdate).toMatchSnapshot();
         return Promise.resolve();
       })
     }));
@@ -112,14 +109,7 @@ describe('slashEnd', () => {
         return {
           send: jest.fn(responseObject => {
             expect(refMock).toHaveBeenCalled();
-            console.log('iniside mockResponse got responseObject:', responseObject)
-            expect(responseObject).toMatchObject(
-              expect.objectContaining({
-                update: expect.objectContaining({
-                  message: expect.any(String)
-                })
-              })
-            );
+            expect(responseObject).toMatchSnapshot();
             done();
           })
         }

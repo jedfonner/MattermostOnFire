@@ -20,6 +20,7 @@ const utils = require('../utils');
 describe('Summarize Poll', ()=> {
   const dummyPoll = {
     prompt: 'Dummy poll',
+    isActive: false,
     options: {
       dummyOptionKey1: {
         label: 'Dummy Option Key 1',
@@ -59,8 +60,7 @@ describe('Summarize Poll', ()=> {
   }
   test('happy path', () => {
     const resultMessage = utils.summarizePoll(dummyPoll);
-    console.log('happy path test returned: ', resultMessage);
-    expect(resultMessage).toBeDefined();
+    expect(resultMessage).toMatchSnapshot();
   });
 
   test('no votes path', () => {
@@ -70,7 +70,13 @@ describe('Summarize Poll', ()=> {
     noVotesPoll.options.dummyOptionKey2.voteCount = 0;
     delete noVotesPoll.votes;
     const resultMessage = utils.summarizePoll(noVotesPoll);
-    console.log('noVotesPoll test returned: ', resultMessage);
-    expect(resultMessage).toBeDefined();
+    expect(resultMessage).toMatchSnapshot();
   });
+
+  test('active poll', () => {
+    let activePoll = utils.deepCopy(dummyPoll);
+    activePoll.isActive = true;
+    const resultMessage = utils.summarizePoll(activePoll);
+    expect(resultMessage).toMatchSnapshot();
+  })
 });

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Summarize Poll active poll 1`] = `
+"Current summary of poll \\"**Dummy poll**\\"
+
+| OPTION | VOTES: 5 | PERCENT |
+| :----- | -----: | -----: |
+| Dummy Option Key 1 | 3 | 60% |
+| Dummy Option Key 2 | 1 | 20% |
+| Dummy Option Key 3 | 1 | 20% |"
+`;
+
+exports[`Summarize Poll happy path 1`] = `
+"The poll \\"**Dummy poll_**\\" has closed.
+
+| OPTION | VOTES: 5 | PERCENT |
+| :----- | -----: | -----: |
+| Dummy Option Key 1 | 3 | 60% |
+| Dummy Option Key 2 | 1 | 20% |
+| Dummy Option Key 3 | 1 | 20% |"
+`;
+
+exports[`Summarize Poll no votes path 1`] = `
+"The poll \\"**Dummy poll_**\\" has closed.
+
+| OPTION | VOTES: 0 | PERCENT |
+| :----- | -----: | -----: |
+| Dummy Option Key 1 | 0 | 0% |
+| Dummy Option Key 2 | 0 | 0% |
+| Dummy Option Key 3 | 1 | 0% |"
+`;

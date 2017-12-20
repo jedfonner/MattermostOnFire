@@ -14,7 +14,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
   /*
   { channel_id: 'qh5bjpmjcfyfjfegj5itb1g99y',
     channel_name: 'just-me',
-    command: '/custompoll',
+    command: '/poll',
     response_url: 'not supported yet',
     team_domain: 'engineering',
     team_id: 'kuajmcdmk3d8fgpwka73uefdfr',
@@ -32,7 +32,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
     console.info('Did not find valid text, returning');
     const returnObject = {
       "response_type": "ephemeral",
-      "text": "Please ceate a poll using the following format: /custompoll Poll Name|Option 1|Option2|...|OptionN."
+      "text": "Please ceate a poll using the following format: /poll Poll Name | Option 1 | Option2 | ... | OptionN."
     }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
