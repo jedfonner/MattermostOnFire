@@ -52,10 +52,9 @@ function isRequestorOwnerOfPoll(request, poll){
 
 function summarizePoll(poll) {
   const totalVotes = poll.votes ? Object.keys(poll.votes).length : 0;
-  const totalVotesTerm = totalVotes === 1 ? 'vote' : 'votes';
-  let message = poll.isActive ? `So far, the poll **_${poll.prompt}_** has received ` : `The poll **_${poll.prompt}_** received a total of `;
-  message += `${totalVotes} ${totalVotesTerm}:\n`;
-  message += `\n| Option | Votes | Percent |`;
+  let message = poll.isActive ? `Current summary of poll "**${poll.prompt}**"` : `The poll "**${poll.prompt}_**" has closed.`;
+  message += `\n`; // Mattermost markdown requires a blank line between text and a table
+  message += `\n| OPTION | VOTES: ${totalVotes} | PERCENT |`;
   message += `\n| :----- | -----: | -----: |`;
   const optionData = poll.options;
   const optionKeys = optionData ? Object.keys(optionData): [];
