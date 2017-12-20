@@ -29,7 +29,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
   }
   const textPieces = req.body.text ? req.body.text.split("|") : [];
   if (textPieces.length <= 1) {
-    console.warn('Did not find valid text, returning');
+    console.info('Did not find valid text, returning');
     const returnObject = {
       "response_type": "ephemeral",
       "text": "Please ceate a poll using the following format: /custompoll Poll Name|Option 1|Option2|...|OptionN."
@@ -81,7 +81,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
     return res.status(200).send(JSON.stringify(returnObject));
   })
   .catch(error => {
-    console.warn('Error creating poll: ', error);
+    console.error('Error creating poll: ', error);
     const returnObject = { ephemeral_text: `There was an error creating your poll: ${error}` }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
@@ -107,7 +107,7 @@ exports.slashVote = functions.https.onRequest((req, res) => {
     const isActive = poll && poll.isActive;
     console.log(`Poll ${pollKey} isActive = ${isActive}`)
     if(!isActive) {
-      console.warn(`Poll ${pollKey} is not active, vote will be discarded`);
+      console.info(`Poll ${pollKey} is not active, vote will be discarded`);
       throw `This poll has ended.`;
     }
     const userId = req.body.user_id;
@@ -182,7 +182,7 @@ exports.slashEnd = functions.https.onRequest((req, res) => {
     const poll = snapshot.val();
     if (!utils.isRequestorOwnerOfPoll(req, poll)){
       const createdByUsername = poll.createdBy;
-      console.warn(`Someone else tried to close poll ${pollKey} created by ${createdByUsername}`);
+      console.info(`Someone else tried to close poll ${pollKey} created by ${createdByUsername}`);
       throw `Only the poll creator can close a poll. Please ask @${createdByUsername} to close it.`;
     }
   })
@@ -221,7 +221,7 @@ exports.slashCount = functions.https.onRequest((req, res) => {
     const poll = snapshot.val();
     if (!utils.isRequestorOwnerOfPoll(req, poll)){
       const createdByUsername = poll.createdBy;
-      console.warn(`Someone else tried to get a vote count of poll ${pollKey} created by ${createdByUsername}`);
+      console.info(`Someone else tried to get a vote count of poll ${pollKey} created by ${createdByUsername}`);
       throw `Only the poll creator can get the vote count. Please ask @${createdByUsername} if you need the count.`;
     }
     const summary = utils.summarizePoll(poll);
