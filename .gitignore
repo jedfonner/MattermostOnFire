@@ -57,5 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
-# Firebase testing files
+# Firebase files
+.firebaserc
 .runtimeconfig.json
