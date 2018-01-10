@@ -27,6 +27,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
   if (!utils.isValidSlashRequest(req)) {
     return res.status(401).send('Invalid request or missing token');
   }
+  const token = req.body.token;
   const textPieces = req.body.text ? req.body.text.split("|") : [];
   if (textPieces.length <= 1) {
     console.info('Did not find valid text, returning');
@@ -66,10 +67,10 @@ exports.slashStart = functions.https.onRequest((req, res) => {
     const optionKeys = optionData ? Object.keys(optionData): [];
     for (const optionKey of optionKeys) {
       const optionValue = optionData[optionKey];
-      attachmentActions.push(utils.buildAction('🖐️', optionValue.label, 'yellow', '/slashVote', newPollRef.key, optionKey));
+      attachmentActions.push(utils.buildAction('🖐️', optionValue.label, 'yellow', '/slashVote', newPollRef.key, token, optionKey));
     };
-    attachmentActions.push(utils.buildAction('🔍', 'Get Vote Count', null, '/slashCount', newPollRef.key, null));
-    attachmentActions.push(utils.buildAction('🏁', 'Close Poll', null, '/slashEnd', newPollRef.key, null));
+    attachmentActions.push(utils.buildAction('🔍', 'Get Vote Count', null, '/slashCount', newPollRef.key, token, null));
+    attachmentActions.push(utils.buildAction('🏁', 'Close Poll', null, '/slashEnd', newPollRef.key, token, null));
 
     console.info(`Successfully created poll ${newPollRef.key} and built actions`, attachmentActions);
     // https://docs.mattermost.com/developer/interactive-message-buttons.html
