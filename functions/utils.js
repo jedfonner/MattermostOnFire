@@ -8,7 +8,8 @@ function deepCopy(object) {
 }
 
 function isValidToken(token){
-  return token && token === MM_INTEGRATION_TOKEN;
+  var tokens = MM_INTEGRATION_TOKEN ? MM_INTEGRATION_TOKEN.split(',') : [];
+  return token && tokens.indexOf(token) !== -1;
 }
 
 function isValidSlashRequest(req){
@@ -29,7 +30,7 @@ function isValidActionRequest(req){
   }
 }
 
-function buildAction(icon, name, color, urlStub, pollKey, optionKey) {
+function buildAction(icon, name, color, urlStub, pollKey, token, optionKey) {
   return {
     name: `${icon} ${name}`,
     color,
@@ -37,7 +38,7 @@ function buildAction(icon, name, color, urlStub, pollKey, optionKey) {
       url: BASE_URL + urlStub,
       context: {
         pollKey: pollKey,
-        token: MM_INTEGRATION_TOKEN,
+        token: token,
         optionKey
       }
     }
