@@ -48,9 +48,9 @@ Setting this up requires doing some initial Firebase setup, then doing some init
 4. When it finishes deploying, it will log the URL for each Function. Note the "Function URL" for `slashStart` (e.g., https://us-central1-PROJECTID.cloudfunctions.net/slashStart)
 
 On a single installation, if you have multiple Mattermost teams and want to use the slash command on each, then you have to register several tokens (one for each slash command created).
-For that you can define token to contain several command id by separating them using a comma `firebase functions:config:set mattermost.token="token1,token2,token3"`
+For that you can specify multiple tokens in the `mattermost.token` environment configuration variable, separating them using a comma like: `firebase functions:config:set mattermost.token="token1,token2,token3"`
 
-The resulting Firebase environment config should look like:
+The resulting Firebase environment config would look like:
 ```
 ᐅ firebase functions:config:get
 {
