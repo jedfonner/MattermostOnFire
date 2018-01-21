@@ -11,7 +11,7 @@ exports[`Summarize Poll active poll 1`] = `
 `;
 
 exports[`Summarize Poll happy path 1`] = `
-"The poll \\"**Dummy poll_**\\" has closed.
+"The poll \\"**Dummy poll**\\" has closed.
 
 | OPTION | VOTES: 5 | PERCENT |
 | :----- | -----: | -----: |
@@ -21,7 +21,7 @@ exports[`Summarize Poll happy path 1`] = `
 `;
 
 exports[`Summarize Poll no votes path 1`] = `
-"The poll \\"**Dummy poll_**\\" has closed.
+"The poll \\"**Dummy poll**\\" has closed.
 
 | OPTION | VOTES: 0 | PERCENT |
 | :----- | -----: | -----: |

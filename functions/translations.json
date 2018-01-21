@@ -23,7 +23,7 @@
       "VOTES": "VOTES: {{totalVotes}}",
       "PERCENT": "PERCENT",
       "CURRENT_SUMMARY": "Current summary of poll \"**{{poll.prompt}}**\"",
-      "CLOSED_SUMMARY": "The poll \"**{{poll.prompt}}_**\" has closed."
+      "CLOSED_SUMMARY": "The poll \"**{{poll.prompt}}**\" has closed."
     }
   },
   "es" : {

@@ -14,7 +14,8 @@
     "jest": "^21.2.1"
   },
   "scripts": {
-    "test": "jest '.*\\.spec\\.js'; exit 0",
+    "test": "jest; exit 0",
+    "test:silent": "jest --silent; exit 0",
     "test:watch": "jest --watch",
     "test:update": "jest -u"
   }
