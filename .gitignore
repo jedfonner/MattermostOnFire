@@ -60,3 +60,5 @@ typings/
 # Firebase files
 .firebaserc
 .runtimeconfig.json
+/.vscode
+/.vscode

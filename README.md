@@ -48,9 +48,9 @@ Setting this up requires doing some initial Firebase setup, then doing some init
 4. When it finishes deploying, it will log the URL for each Function. Note the "Function URL" for `slashStart` (e.g., https://us-central1-PROJECTID.cloudfunctions.net/slashStart)
 
 On a single installation, if you have multiple Mattermost teams and want to use the slash command on each, then you have to register several tokens (one for each slash command created).
-For that you can define token to contain several command id by separating them using a comma `firebase functions:config:set mattermost.token="token1,token2,token3"`
+For that you can specify multiple tokens in the `mattermost.token` environment configuration variable, separating them using a comma like: `firebase functions:config:set mattermost.token="token1,token2,token3"`
 
-The resulting Firebase environment config should look like:
+The resulting Firebase environment config would look like:
 ```
 ᐅ firebase functions:config:get
 {
@@ -67,6 +67,29 @@ The resulting Firebase environment config should look like:
 1. Edit your Mattermost Slash command and update the Request URL to be the URL of your Firebase Functions `slashStart` function
 
 🎉  ALL DONE!
+
+## Internationalization
+If you want to use a different language other than English, do the following:
+1. Specify the desired language using the [2-letter ISO language code](https://www.sitepoint.com/iso-2-letter-language-codes/) by running `firebase functions:config:set mattermost.language="YOUR CODE"`.
+   * Example: running `firebase functions:config:set mattermost.language="es"` would configure MattermostOnFire to use Spanish instead of English.
+   * This should be done prior to running `firebase deploy`
+2. Check your Firebase environment config by running `firebase functions:config:get`. For example, if specifying Spanish then your config would look like:
+```
+ᐅ firebase functions:config:get
+{
+  "mattermost": {
+    "token": "abcdefghijklmnopqrstuvwxyz",
+    "language": "es"
+  },
+  "functions": {
+    "baseurl": "https://us-central1-myprojectid.cloudfunctions.net"
+  }
+}
+```
+
+Make sure that the language you specify is supported. Check that there is a top-level key in [translations](/functions/translations.json) for your desired 2 letter language code.
+
+Please help expand this project's support for more languages by opening a pull request to add a new language to the [translations](/functions/translations.json) file.
 
 ## Runtime Monitoring
 * You can review the logs for the functions via the Functions > Logs interface of the Firebase Console

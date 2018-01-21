@@ -1,4 +1,5 @@
 const functions = require('firebase-functions');
+const i18n = require('./i18n');
 
 const MM_INTEGRATION_TOKEN = functions.config().mattermost.token;
 const BASE_URL = functions.config().functions.baseurl;
@@ -53,10 +54,13 @@ function isRequestorOwnerOfPoll(request, poll){
 
 function summarizePoll(poll) {
   const totalVotes = poll.votes ? Object.keys(poll.votes).length : 0;
-  let message = poll.isActive ? `Current summary of poll "**${poll.prompt}**"` : `The poll "**${poll.prompt}_**" has closed.`;
-  message += `\n`; // Mattermost markdown requires a blank line between text and a table
-  message += `\n| OPTION | VOTES: ${totalVotes} | PERCENT |`;
-  message += `\n| :----- | -----: | -----: |`;
+  let message = poll.isActive ? i18n.t('CURRENT_SUMMARY', { poll }) : i18n.t('CLOSED_SUMMARY', { poll });
+  message += '\n'; // Mattermost markdown requires a blank line between text and a table
+  message += '\n| '; // Start the table header row
+  message += i18n.t('OPTION') + ' | '; // pipe indicates the end of a column
+  message += i18n.t('VOTES', { totalVotes }) + ' | ';
+  message += i18n.t('PERCENT') +' |';
+  message += '\n| :----- | -----: | -----: |'; // align columns left, right, right
   const optionData = poll.options;
   const optionKeys = optionData ? Object.keys(optionData): [];
   for (const optionKey of optionKeys) {
