@@ -31,5 +31,32 @@
       "testKey": "hola mundo",
       "testKeyWithParams": "hola {{ testParam }} mundo"
     }
+  },
+  "fr": {
+    "translation": {
+      "testKey": "ça marche",
+      "testKeyWithParam": "le paramètre {{ testParam }} marche",
+      "testKeyWithObjectParam": "le paramètre {{ testParam.text }} marche",
+      "testKeyOnlyInFallbackLng": "foo bar",
+      "USAGE": "Pour créer un sondage, veuillez utiliser le format suivant : /poll Nom du sondage | Option 1 | Option2 | ... | OptionN.",
+      "GET_VOTES": "Obtenir le décompte des voix",
+      "CLOSE_POLL": "Fermer le sondage",
+      "ERROR_CREATING": "Une erreur s'est produite durant la création du sondage : {{error}}",
+      "POLL_ENDED": "Ce sondage est terminé.",
+      "PREVIOUS_VOTE_REPLACED": "Votre vote pour **_{{optionData.label}}_** a bien été remplacé. ",
+      "VOTE_RECORDED": "Votre vote pour **_{{optionData.label}}_** a bien été enregistré. ",
+      "THANKS_FOR_VOTING": "Merci d'avoir voté. {{ message }}",
+      "ERROR_VOTING": "Votre vote n'a pas pu être enregistré. {{error}}",
+      "POLL_END_PERMISSION": "Seul.e læ créateurice d'un sondage peut le fermer. Veuillez demander à @{{createdByUsername}} de le fermer.",
+      "ERROR_ENDING": "Le sondage n'a pas pu être fermé. {{ error }}",
+      "POLL_COUNT_PERMISSION": "Seul.e læ créateurice d'un sondage peut obtenir le décompte des voix. Veuillez demander à @{{createdByUsername}} si vous avez besoin du décompte.",
+      "ERROR_COUNTING": "Le décompte des voix n'a pas pu être obtenu. {{error}}",
+      "UNAUTHORIZED": "Requête invalide ou token manquant",
+      "OPTION": "OPTION",
+      "VOTES": "VOTES: {{totalVotes}}",
+      "PERCENT": "PERCENT",
+      "CURRENT_SUMMARY": "Résumé du sondage \"**{{poll.prompt}}**\"",
+      "CLOSED_SUMMARY": "Le sondage \"**{{poll.prompt}}**\" a fermé."
+    }
   }
 }
