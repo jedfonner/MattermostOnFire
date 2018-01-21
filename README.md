@@ -44,8 +44,6 @@ Setting this up requires doing some initial Firebase setup, then doing some init
   }
 }
 ```
-(Note, you may not see the `functions.language` variable if you did not explicitely set it and instead want to use the default. See the [i18n section](#Internationalization).
-
 3. Deploy your project by running `firebase deploy`.
 4. When it finishes deploying, it will log the URL for each Function. Note the "Function URL" for `slashStart` (e.g., https://us-central1-PROJECTID.cloudfunctions.net/slashStart)
 
@@ -72,19 +70,19 @@ The resulting Firebase environment config would look like:
 
 ## Internationalization
 If you want to use a different language other than English, do the following:
-1. Specify the desired language using the [2-letter ISO language code](https://www.sitepoint.com/iso-2-letter-language-codes/) by running `firebase functions:config:set functions.language="YOUR CODE"`.
-   * Example: running `firebase functions:config:set functions.language="es"` would configure MattermostOnFire to use Spanish instead of English.
+1. Specify the desired language using the [2-letter ISO language code](https://www.sitepoint.com/iso-2-letter-language-codes/) by running `firebase functions:config:set mattermost.language="YOUR CODE"`.
+   * Example: running `firebase functions:config:set mattermost.language="es"` would configure MattermostOnFire to use Spanish instead of English.
    * This should be done prior to running `firebase deploy`
 2. Check your Firebase environment config by running `firebase functions:config:get`. For example, if specifying Spanish then your config would look like:
 ```
 ᐅ firebase functions:config:get
 {
   "mattermost": {
-    "token": "abcdefghijklmnopqrstuvwxyz"
+    "token": "abcdefghijklmnopqrstuvwxyz",
+    "language": "es"
   },
   "functions": {
-    "baseurl": "https://us-central1-myprojectid.cloudfunctions.net",
-    "language": "es"
+    "baseurl": "https://us-central1-myprojectid.cloudfunctions.net"
   }
 }
 ```
