@@ -6,7 +6,8 @@
   },
   "dependencies": {
     "firebase-admin": "5.4.2",
-    "firebase-functions": "0.7.1"
+    "firebase-functions": "^0.8.1",
+    "i18next": "^10.2.2"
   },
   "private": true,
   "devDependencies": {

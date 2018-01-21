@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const utils = require('./utils');
+const i18n = require('./i18n');
 
 admin.initializeApp(functions.config().firebase);
 
@@ -25,7 +26,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
   }
   */
   if (!utils.isValidSlashRequest(req)) {
-    return res.status(401).send('Invalid request or missing token');
+    return res.status(401).send(i18n.t('UNAUTHORIZED'));
   }
   const token = req.body.token;
   const textPieces = req.body.text ? req.body.text.split("|") : [];
@@ -33,7 +34,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
     console.info('Did not find valid text, returning');
     const returnObject = {
       "response_type": "ephemeral",
-      "text": "Please ceate a poll using the following format: /poll Poll Name | Option 1 | Option2 | ... | OptionN."
+      "text": i18n.t('USAGE')
     }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
@@ -69,8 +70,8 @@ exports.slashStart = functions.https.onRequest((req, res) => {
       const optionValue = optionData[optionKey];
       attachmentActions.push(utils.buildAction('🖐️', optionValue.label, 'yellow', '/slashVote', newPollRef.key, token, optionKey));
     };
-    attachmentActions.push(utils.buildAction('🔍', 'Get Vote Count', null, '/slashCount', newPollRef.key, token, null));
-    attachmentActions.push(utils.buildAction('🏁', 'Close Poll', null, '/slashEnd', newPollRef.key, token, null));
+    attachmentActions.push(utils.buildAction('🔍', i18n.t('GET_VOTES'), null, '/slashCount', newPollRef.key, token, null));
+    attachmentActions.push(utils.buildAction('🏁', i18n.t('CLOSE_POLL'), null, '/slashEnd', newPollRef.key, token, null));
 
     console.info(`Successfully created poll ${newPollRef.key} and built actions`, attachmentActions);
     // https://docs.mattermost.com/developer/interactive-message-buttons.html
@@ -83,7 +84,7 @@ exports.slashStart = functions.https.onRequest((req, res) => {
   })
   .catch(error => {
     console.error('Error creating poll: ', error);
-    const returnObject = { ephemeral_text: `There was an error creating your poll: ${error}` }
+    const returnObject = { ephemeral_text: i18n.t('ERROR_CREATING', { error }) }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
   })
@@ -96,11 +97,11 @@ exports.slashStart = functions.https.onRequest((req, res) => {
 exports.slashVote = functions.https.onRequest((req, res) => {
   console.log('Received body: ', req.body);
   if (!utils.isValidActionRequest(req)) {
-    return res.status(401).send('Invalid request or missing token');
+    return res.status(401).send(i18n.t('UNAUTHORIZED'));
   }
   const pollKey = req.body.context.pollKey;
   console.log('Poll key', pollKey);
-  let ephemeralMessage = '';
+  let message = '';
   const pollRef = admin.database().ref(`/polls/${pollKey}`);
   return pollRef.once('value')
   .then(snapshot => {
@@ -109,7 +110,7 @@ exports.slashVote = functions.https.onRequest((req, res) => {
     console.log(`Poll ${pollKey} isActive = ${isActive}`)
     if(!isActive) {
       console.info(`Poll ${pollKey} is not active, vote will be discarded`);
-      throw `This poll has ended.`;
+      throw i18n.t('POLL_ENDED');
     }
     const userId = req.body.user_id;
     const votedAt = new Date().toISOString();
@@ -130,7 +131,7 @@ exports.slashVote = functions.https.onRequest((req, res) => {
       const optionDecrementPromise = optionDecrementRef.transaction(optionData => {
         if (optionData) {
           optionData.voteCount--;
-          ephemeralMessage += `Your previous vote for **_${optionData.label}_** has been replaced. `
+          message += i18n.t('PREVIOUS_VOTE_REPLACED', { optionData });
           console.info(`Decrementing vote count for ${previousVoteOptionKey} (${optionData.label}) to ${optionData.voteCount}`);
         }
         return optionData;
@@ -143,7 +144,7 @@ exports.slashVote = functions.https.onRequest((req, res) => {
     const optionIncrementPromise = optionIncrementRef.transaction(optionData => {
       if (optionData) {
         optionData.voteCount++;
-        ephemeralMessage += `Your vote for **_${optionData.label}_** has been recorded. `
+        message += i18n.t('VOTE_RECORDED', { optionData });
         console.info(`Incrementing vote count for ${optionKey} (${optionData.label}) to ${optionData.voteCount}`);
       }
       return optionData;
@@ -154,13 +155,13 @@ exports.slashVote = functions.https.onRequest((req, res) => {
     return Promise.all(databasePromises)
   })
   .then(() => {
-    const returnObject = { ephemeral_text: `Thanks for voting. ${ephemeralMessage}` }
+    const returnObject = { ephemeral_text: i18n.t('THANKS_FOR_VOTING', { message }) }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
   })
   .catch(error => {
     console.error(`Error recording vote for poll ${pollKey}: `, error)
-    const returnObject = { ephemeral_text: `Your vote could not be recorded. ${error}` }
+    const returnObject = { ephemeral_text: i18n.t('ERROR_VOTING', {error}) }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
   })
@@ -174,7 +175,7 @@ exports.slashVote = functions.https.onRequest((req, res) => {
 exports.slashEnd = functions.https.onRequest((req, res) => {
   console.log('Received body: ', req.body);
   if (!utils.isValidActionRequest(req)) {
-    return res.status(401).send('Invalid request or missing token');
+    return res.status(401).send(i18n.t('UNAUTHORIZED'));
   }
   const pollKey = req.body.context.pollKey;
   const pollRef = admin.database().ref(`/polls/${pollKey}`);
@@ -184,7 +185,7 @@ exports.slashEnd = functions.https.onRequest((req, res) => {
     if (!utils.isRequestorOwnerOfPoll(req, poll)){
       const createdByUsername = poll.createdBy;
       console.info(`Someone else tried to close poll ${pollKey} created by ${createdByUsername}`);
-      throw `Only the poll creator can close a poll. Please ask @${createdByUsername} to close it.`;
+      throw i18n.t('POLL_END_PERMISSION', { createdByUsername });
     }
   })
   .then(() => pollRef.update({isActive: false}))
@@ -199,7 +200,7 @@ exports.slashEnd = functions.https.onRequest((req, res) => {
   })
   .catch(error => {
     console.error(`Error ending poll ${pollKey}: `, error);
-    const returnObject = { ephemeral_text: `Unable to close the poll. ${error}` }
+    const returnObject = { ephemeral_text: i18n.t('ERROR_ENDING', { error }) }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
   });
@@ -213,7 +214,7 @@ exports.slashEnd = functions.https.onRequest((req, res) => {
 exports.slashCount = functions.https.onRequest((req, res) => {
   console.log('Received body: ', req.body);
   if (!utils.isValidActionRequest(req)) {
-    return res.status(401).send('Invalid request or missing token');
+    return res.status(401).send(i18n.t('UNAUTHORIZED'));
   }
   const pollKey = req.body.context.pollKey;
   const pollRef = admin.database().ref(`/polls/${pollKey}`);
@@ -223,7 +224,7 @@ exports.slashCount = functions.https.onRequest((req, res) => {
     if (!utils.isRequestorOwnerOfPoll(req, poll)){
       const createdByUsername = poll.createdBy;
       console.info(`Someone else tried to get a vote count of poll ${pollKey} created by ${createdByUsername}`);
-      throw `Only the poll creator can get the vote count. Please ask @${createdByUsername} if you need the count.`;
+      throw i18n.t('POLL_COUNT_PERMISSION', { createdByUsername });
     }
     const summary = utils.summarizePoll(poll);
     const returnObject = { ephemeral_text: summary };
@@ -233,7 +234,7 @@ exports.slashCount = functions.https.onRequest((req, res) => {
   })
   .catch(error => {
     console.error(`Error counting poll ${pollKey}: `, error);
-    const returnObject = { ephemeral_text: `Unable to get vote count for poll. ${error}` }
+    const returnObject = { ephemeral_text: i18n.t('ERROR_COUNTING', { error }) }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
   });

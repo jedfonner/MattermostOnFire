@@ -1,0 +1,35 @@
+{
+  "en": {
+    "translation": {
+      "testKey": "hello world",
+      "testKeyWithParam": "hello {{ testParam }} world",
+      "testKeyWithObjectParam": "hello {{ testParam.text }} world",
+      "testKeyOnlyInFallbackLng": "foo bar",
+      "USAGE": "Please ceate a poll using the following format: /poll Poll Name | Option 1 | Option2 | ... | OptionN.",
+      "GET_VOTES": "Get Vote Count",
+      "CLOSE_POLL": "Close Poll",
+      "ERROR_CREATING": "There was an error creating your poll: {{error}}",
+      "POLL_ENDED": "This poll has ended.",
+      "PREVIOUS_VOTE_REPLACED": "Your previous vote for **_{{optionData.label}}_** has been replaced. ",
+      "VOTE_RECORDED": "Your vote for **_{{optionData.label}}_** has been recorded. ",
+      "THANKS_FOR_VOTING": "Thanks for voting. {{ message }}",
+      "ERROR_VOTING": "Your vote could not be recorded. {{error}}",
+      "POLL_END_PERMISSION": "Only the poll creator can close a poll. Please ask @{{createdByUsername}} to close it.",
+      "ERROR_ENDING": "Unable to close the poll. {{ error }}",
+      "POLL_COUNT_PERMISSION": "Only the poll creator can get the vote count. Please ask @{{createdByUsername}} if you need the count.",
+      "ERROR_COUNTING": "Unable to get vote count for poll. {{error}}",
+      "UNAUTHORIZED": "Invalid request or missing token",
+      "OPTION": "OPTION",
+      "VOTES": "VOTES: {{totalVotes}}",
+      "PERCENT": "PERCENT",
+      "CURRENT_SUMMARY": "Current summary of poll \"**{{poll.prompt}}**\"",
+      "CLOSED_SUMMARY": "The poll \"**{{poll.prompt}}_**\" has closed."
+    }
+  },
+  "es" : {
+    "translation": {
+      "testKey": "hola mundo",
+      "testKeyWithParams": "hola {{ testParam }} mundo"
+    }
+  }
+}
