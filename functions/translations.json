@@ -29,7 +29,26 @@
   "es" : {
     "translation": {
       "testKey": "hola mundo",
-      "testKeyWithParams": "hola {{ testParam }} mundo"
+      "testKeyWithParams": "hola {{ testParam }} mundo",
+      "USAGE": "Por favor crea una encuesta usando el siguiente formato: /poll Nombre | Opción 1 | Opción 2 | ... | Opción N.",
+      "GET_VOTES": "Conteo de Votos",
+      "CLOSE_POLL": "Cerrar Encuesta",
+      "ERROR_CREATING": "Hubo un error al crear su encuesta: {{error}}",
+      "POLL_ENDED": "Esta encuesta ha terminado.",
+      "PREVIOUS_VOTE_REPLACED": "Tu voto anterior por **_{{optionData.label}}_** ha sido reemplazado. ",
+      "VOTE_RECORDED": "Tu voto por **_{{optionData.label}}_** ha sido grabado. ",
+      "THANKS_FOR_VOTING": "Gracias por votar. {{ message }}",
+      "ERROR_VOTING": "Su voto no pudo ser registrado. {{error}}",
+      "POLL_END_PERMISSION": "Solo el creador de la encuesta puede cerrar una encuesta. Pídele a @{{createdByUsername}} que lo cierre.",
+      "ERROR_ENDING": "No se puede cerrar la encuesta. {{ error }}",
+      "POLL_COUNT_PERMISSION": "Solo el creador de la encuesta puede obtener el conteo de votos. Pregúntale a @{{createdByUsername}} si necesitas el recuento de sondeos.",
+      "ERROR_COUNTING": "No se puede obtener el conteo de votos para la encuesta. {{error}}",
+      "UNAUTHORIZED": "Solicitud no válida o token faltante",
+      "OPTION": "OPCIÓN",
+      "VOTES": "VOTOS: {{totalVotes}}",
+      "PERCENT": "POR CIENTO",
+      "CURRENT_SUMMARY": "Resumen actual de la encuesta \"**{{poll.prompt}}**\"",
+      "CLOSED_SUMMARY": "La encuesta llamada \"**{{poll.prompt}}**\" ha cerrado."
     }
   }
 }
