@@ -31,5 +31,32 @@
       "testKey": "hola mundo",
       "testKeyWithParams": "hola {{ testParam }} mundo"
     }
+  },
+  "de": {
+    "translation": {
+      "testKey": "Hallo Welt",
+      "testKeyWithParam": "Hallo {{ testParam }} Welt",
+      "testKeyWithObjectParam": "Hallo {{ testParam.text }} Welt",
+      "testKeyOnlyInFallbackLng": "foo bar_de",
+      "USAGE": "Erstelle eine Umfrage in folgendem Format: /poll Titel der Umfrage | Option 1 | Option 2 | ... | Option N.",
+      "GET_VOTES": "Umfrageergebnis abrufen",
+      "CLOSE_POLL": "Umfrage beenden",
+      "ERROR_CREATING": "Beim Erstellen der Umfrage ist ein Fehler aufgetreten: {{error}}",
+      "POLL_ENDED": "Diese Umfrage wurde beendet.",
+      "PREVIOUS_VOTE_REPLACED": "Deine vorherige Stimme für **_{{optionData.label}}_** wurde ersetzt. ",
+      "VOTE_RECORDED": "Deine Stimme für **_{{optionData.label}}_** wurde aufgezeichnet. ",
+      "THANKS_FOR_VOTING": "Danke für deine Stimmabgabe. {{ message }}",
+      "ERROR_VOTING": "Deine Stimme konnte nicht gespeichert werden. {{error}}",
+      "POLL_END_PERMISSION": "Nur der Ersteller kann eine Umfrage schließen. Wende dich bitte an @{{createdByUsername}}.",
+      "ERROR_ENDING": "Die Umfrage kann wegen eines Fehlers nicht geschlossen werden. {{ error }}",
+      "POLL_COUNT_PERMISSION": "Nur der Ersteller kann das Umfrageergebnis abrufen. Wende dich bitte an @{{createdByUsername}}, wenn du ein Zwischenergebnis möchtest.",
+      "ERROR_COUNTING": "Fehler beim Abruf der Ergebnisse. {{error}}",
+      "UNAUTHORIZED": "Ungültige Anfrage oder fehlendes Token",
+      "OPTION": "OPTION",
+      "VOTES": "STIMMEN: {{totalVotes}}",
+      "PERCENT": "PROZENT",
+      "CURRENT_SUMMARY": "Derzeitiges Umfrageergebnis \"**{{poll.prompt}}**\"",
+      "CLOSED_SUMMARY": "Die Umfrage \"**{{poll.prompt}}_**\" wurde abgeschlossen."
+    }
   }
 }
