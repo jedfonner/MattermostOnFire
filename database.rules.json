@@ -1,8 +1,8 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null",
-    "polls" : {
+    "polls": {
+      ".write": false,
+      ".read": false,
       ".indexOn": ["createdAt", "isActive"]
     }
   }
