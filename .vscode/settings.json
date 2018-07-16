@@ -1,3 +1,4 @@
 {
-  "jest.pathToJest": "functions/node_modules/.bin/jest"
+  "jest.pathToJest": "functions/node_modules/.bin/jest",
+  "editor.formatOnSave": false
 }
