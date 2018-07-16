@@ -15,7 +15,7 @@
         "Your previous vote for **_{{optionData.label}}_** has been replaced. ",
       "VOTE_RECORDED":
         "Your vote for **_{{optionData.label}}_** has been recorded. ",
-      "THANKS_FOR_VOTING": "Thanks for voting. {{ message }}",
+      "THANKS_FOR_VOTING": "Thanks for voting.",
       "ERROR_VOTING": "Your vote could not be recorded. {{error}}",
       "POLL_END_PERMISSION":
         "Only the poll creator can close a poll. Please ask @{{createdByUsername}} to close it.",
@@ -45,7 +45,7 @@
         "Tu voto anterior por **_{{optionData.label}}_** ha sido reemplazado. ",
       "VOTE_RECORDED":
         "Tu voto por **_{{optionData.label}}_** ha sido grabado. ",
-      "THANKS_FOR_VOTING": "Gracias por votar. {{ message }}",
+      "THANKS_FOR_VOTING": "Gracias por votar.",
       "ERROR_VOTING": "Su voto no pudo ser registrado. {{error}}",
       "POLL_END_PERMISSION":
         "Solo el creador de la encuesta puede cerrar una encuesta. Pídele a @{{createdByUsername}} que lo cierre.",
@@ -81,7 +81,7 @@
         "Votre vote pour **_{{optionData.label}}_** a bien été remplacé. ",
       "VOTE_RECORDED":
         "Votre vote pour **_{{optionData.label}}_** a bien été enregistré. ",
-      "THANKS_FOR_VOTING": "Merci d'avoir voté. {{ message }}",
+      "THANKS_FOR_VOTING": "Merci d'avoir voté.",
       "ERROR_VOTING": "Votre vote n'a pas pu être enregistré. {{error}}",
       "POLL_END_PERMISSION":
         "Seul.e læ créateurice d'un sondage peut le fermer. Veuillez demander à @{{createdByUsername}} de le fermer.",
@@ -115,7 +115,7 @@
         "Deine vorherige Stimme für **_{{optionData.label}}_** wurde ersetzt. ",
       "VOTE_RECORDED":
         "Deine Stimme für **_{{optionData.label}}_** wurde aufgezeichnet. ",
-      "THANKS_FOR_VOTING": "Danke für deine Stimmabgabe. {{ message }}",
+      "THANKS_FOR_VOTING": "Danke für deine Stimmabgabe.",
       "ERROR_VOTING": "Deine Stimme konnte nicht gespeichert werden. {{error}}",
       "POLL_END_PERMISSION":
         "Nur der Ersteller kann eine Umfrage schließen. Wende dich bitte an @{{createdByUsername}}.",

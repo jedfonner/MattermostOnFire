@@ -155,7 +155,7 @@ exports.slashVote = functions.https.onRequest((req, res) => {
     return Promise.all(databasePromises)
   })
   .then(() => {
-    const returnObject = { ephemeral_text: i18n.t('THANKS_FOR_VOTING', { message }) }
+    const returnObject = { ephemeral_text: `${i18n.t('THANKS_FOR_VOTING')} ${message}` }
     res.set('Content-Type', 'application/json');
     return res.status(200).send(returnObject);
   })
