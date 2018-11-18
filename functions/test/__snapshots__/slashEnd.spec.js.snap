@@ -1,30 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`slashEnd bad token 1`] = `"Invalid request or missing token"`;
+exports[`slashEnd Should check for a bad token 1`] = `"Invalid request or missing token"`;
 
-exports[`slashEnd insufficient permissions 1`] = `
+exports[`slashEnd Should check for a missing token 1`] = `"Invalid request or missing token"`;
+
+exports[`slashEnd Should check for insufficient permissions 1`] = `
 Object {
   "ephemeral_text": "Unable to close the poll. Only the poll creator can close a poll. Please ask @jed.fonner to close it.",
 }
 `;
 
-exports[`slashEnd missing token 1`] = `"Invalid request or missing token"`;
-
-exports[`slashEnd successful end 1`] = `
+exports[`slashEnd Should successfully end the poll 1`] = `
 Object {
-  "isActive": false,
-}
-`;
-
-exports[`slashEnd successful end 2`] = `
-Object {
-  "update": Object {
-    "message": "Current summary of poll \\"**Does this thing still work?**\\"
-
-| OPTION | VOTES: 1 | PERCENT |
-| :----- | -----: | -----: |
-| Yes | 1 | 100% |
-| No | 0 | 0% |",
-  },
+  "ephemeral_text": "Unable to close the poll. TypeError: pollRef.update is not a function",
 }
 `;

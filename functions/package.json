@@ -11,6 +11,7 @@
   },
   "private": true,
   "devDependencies": {
+    "firebase-functions-test": "^0.1.4",
     "jest": "^23.6.0"
   },
   "scripts": {

@@ -1,7 +1,8 @@
 'use strict';
 /* Imports and Mocks */
 let admin = require('firebase-admin');
-const functions = require('firebase-functions');
+admin.initializeApp = jest.fn();
+const test = require('firebase-functions-test')();
 
 const {
   TEST_MM_INTEGRATION_TOKEN,
@@ -10,20 +11,32 @@ const {
   TEST_ACTIVE_POLL
 } = require('./sampleData');
 
-functions.config = jest.fn(() => ({
+test.mockConfig({
   mattermost: { token: TEST_MM_INTEGRATION_TOKEN },
-  functions: { baseurl: TEST_BASE_URL },
-  firebase: {
-    credential: admin.credential.applicationDefault(),
-    databaseURL: 'https://not-a-project.firebaseio.com',
-    storageBucket: 'not-a-project.appspot.com'
-  }
-}));
+  functions: { baseurl: TEST_BASE_URL }
+});
+
 const utils = require('../utils');
 const myFunctions = require('../index');
 
-describe('slashEnd', () => {
-  test('missing token', done => {
+describe('slashCount', () => {
+  let refMock, databaseStub;
+
+  beforeAll(() => {
+    refMock = jest.fn(location => {
+      return {
+        once: jest.fn(eventName => Promise.resolve({val: jest.fn(() => TEST_ACTIVE_POLL)}))
+      };
+    })
+    databaseStub = jest.fn(() => {
+      return {
+        ref: refMock
+      };
+    });
+    Object.defineProperty(admin, "database", { get: () => databaseStub });
+  });
+
+  it('Should check for a missing token', done => {
     let mockRequest = { body: utils.deepCopy(VALID_COUNT_REQUEST_BODY) };
     delete mockRequest.body.context.token;
     const mockResponse = {
@@ -40,7 +53,7 @@ describe('slashEnd', () => {
     myFunctions.slashCount(mockRequest, mockResponse);
   });
 
-  test('bad token', done => {
+  it('Should check for a bad token', done => {
     let mockRequest = { body: utils.deepCopy(VALID_COUNT_REQUEST_BODY) };
     mockRequest.body.context.token = 'invalid token';
     const mockResponse = {
@@ -57,18 +70,9 @@ describe('slashEnd', () => {
     myFunctions.slashCount(mockRequest, mockResponse);
   });
 
-  test('insufficient permissions', done => {
+  it('Should check for insufficient permissions', done => {
     let mockRequest = { body: utils.deepCopy(VALID_COUNT_REQUEST_BODY) };
     mockRequest.body.user_id = 'not poll creator';
-    let refMock = jest.fn(location => ({
-      once: jest.fn(eventName => {
-        const snapshotMock = {
-          val: jest.fn(() => TEST_ACTIVE_POLL)
-        };
-        return Promise.resolve(snapshotMock);
-      })
-    }));
-    admin.database = jest.fn(() => ({ ref: refMock }));
 
     const mockResponse = {
       set: jest.fn(),
@@ -86,18 +90,8 @@ describe('slashEnd', () => {
     myFunctions.slashCount(mockRequest, mockResponse);
   });
 
-  test('successful count', done => {
+  it('Should perform a successful count', done => {
     let mockRequest = { body: utils.deepCopy(VALID_COUNT_REQUEST_BODY) };
-    let refMock = jest.fn(location => ({
-      once: jest.fn(eventName => {
-        const snapshotMock = {
-          val: jest.fn(() => TEST_ACTIVE_POLL)
-        };
-        return Promise.resolve(snapshotMock);
-      })
-    }));
-    admin.database = jest.fn(() => ({ ref: refMock }));
-
     const mockResponse = {
       set: jest.fn(),
       status: code => {

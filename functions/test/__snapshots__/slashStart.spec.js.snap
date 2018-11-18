@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`slashStart bad text 1`] = `
+exports[`slashStart Should check for a missing token 1`] = `"Invalid request or missing token"`;
+
+exports[`slashStart Should check for an invalid token 1`] = `"Invalid request or missing token"`;
+
+exports[`slashStart Should check for bad text 1`] = `
 Object {
   "response_type": "ephemeral",
   "text": "Please ceate a poll using the following format: /poll Poll Name | Option 1 | Option2 | ... | OptionN.",
 }
 `;
 
-exports[`slashStart invalid token 1`] = `"Invalid request or missing token"`;
-
-exports[`slashStart missing token 1`] = `"Invalid request or missing token"`;
-
-exports[`slashStart valid poll start 1`] = `
+exports[`slashStart Should start a valid poll 1`] = `
 Object {
   "attachments": Array [
     Object {

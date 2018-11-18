@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const utils = require('./utils');
 const i18n = require('./i18n');
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 /**
  * Mattermost slash command integration endpoint

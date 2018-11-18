@@ -1,19 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`slashVote existing vote for active poll 1`] = `
+exports[`slashVote Should add a new vote for active poll 1`] = `
 Object {
-  "ephemeral_text": "Thanks for voting. Your previous vote for **_Yes_** has been replaced. Your vote for **_No_** has been recorded. ",
+  "ephemeral_text": "Thanks for voting. Your vote for **_Yes_** has been recorded. ",
 }
 `;
 
-exports[`slashVote inactive poll 1`] = `
+exports[`slashVote Should check for an inactive poll 1`] = `
 Object {
   "ephemeral_text": "Your vote could not be recorded. This poll has ended.",
 }
 `;
 
-exports[`slashVote new vote for active poll 1`] = `
+exports[`slashVote Should edit an existing vote for active poll 1`] = `
 Object {
-  "ephemeral_text": "Thanks for voting. Your vote for **_Yes_** has been recorded. ",
+  "ephemeral_text": "Thanks for voting. Your previous vote for **_Yes_** has been replaced. Your vote for **_No_** has been recorded. ",
 }
 `;

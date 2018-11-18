@@ -1,7 +1,7 @@
 'use strict'
 /* Imports and Mocks */
 let admin = require('firebase-admin');
-const functions = require('firebase-functions');
+const test = require('firebase-functions-test')();
 
 const {
   TEST_MM_INTEGRATION_TOKEN,
@@ -16,25 +16,28 @@ const {
   TEST_OPTION_KEY2
 } = require('./sampleData');
 
-functions.config = jest.fn(() => ({
+test.mockConfig({
   mattermost: { token: TEST_MM_INTEGRATION_TOKEN },
-  functions: { baseurl: TEST_BASE_URL },
-  firebase: {
-    credential: admin.credential.applicationDefault(),
-    databaseURL: 'https://not-a-project.firebaseio.com',
-    storageBucket: 'not-a-project.appspot.com'
-  }
-}));
+  functions: { baseurl: TEST_BASE_URL }
+});
 
 const utils = require('../utils');
 const myFunctions = require('../index');
 
 /* Tests */
 describe('slashVote', () => {
-  beforeEach(() => {
+  let refMock;
+  beforeAll(() => {
+    const databaseStub = jest.fn(() => {
+      return {
+        ref: refMock
+      };
+    });
+    // This can only be done once
+    Object.defineProperty(admin, "database", { get: () => databaseStub });
   });
 
-  test('missing token', done => {
+  it('Should check for a missing token', done => {
     let mockRequest = { body: utils.deepCopy(VALID_VOTE_REQUEST_BODY) };
     delete mockRequest.body.context.token;
     const mockResponse = {
@@ -51,7 +54,7 @@ describe('slashVote', () => {
     myFunctions.slashVote(mockRequest, mockResponse);
   });
 
-  test('bad token', done => {
+  it('Should check for a bad token', done => {
     let mockRequest = { body: utils.deepCopy(VALID_VOTE_REQUEST_BODY) };
     mockRequest.body.context.token = 'invalid token';
     const mockResponse = {
@@ -68,7 +71,7 @@ describe('slashVote', () => {
     myFunctions.slashVote(mockRequest, mockResponse);
   });
 
-  test('inactive poll', done => {
+  it('Should check for an inactive poll', done => {
     let mockRequest = { body: utils.deepCopy(VALID_VOTE_REQUEST_BODY) };
     console.log('inactive poll MockRequest', mockRequest)
     const mockResponse = {
@@ -85,7 +88,7 @@ describe('slashVote', () => {
         }
       }
     }
-    let refMock = jest.fn(location => {
+    refMock = jest.fn(location => {
       return {
         once: jest.fn(eventName => {
           const snapshotMock = {
@@ -97,11 +100,10 @@ describe('slashVote', () => {
         })
       }
     });
-    admin.database = jest.fn(() => ({ ref: refMock }));
     myFunctions.slashVote(mockRequest, mockResponse);
   });
 
-  test('new vote for active poll', done => {
+  it('Should add a new vote for active poll', done => {
     let mockRequest = { body: utils.deepCopy(VALID_VOTE_REQUEST_BODY) };
     mockRequest.body.user_id = 'newUserId';
 
@@ -111,7 +113,8 @@ describe('slashVote', () => {
       expect(updatedOptions.voteCount).toBe(2);
     });
     let newVoteSetMock = jest.fn();
-    let refMock = jest.fn(location => {
+
+    refMock = jest.fn(location => {
       if (location === `/polls/${TEST_POLL_KEY}`) {
         return {
           once: jest.fn(eventName => {
@@ -127,7 +130,6 @@ describe('slashVote', () => {
         return { transaction: transactionMock };
       }
     });
-    admin.database = jest.fn(() => ({ ref: refMock }));
 
     const mockResponse = {
       set: jest.fn(),
@@ -148,7 +150,7 @@ describe('slashVote', () => {
     myFunctions.slashVote(mockRequest, mockResponse);
   })
 
-  test('existing vote for active poll', done => {
+  it('Should edit an existing vote for active poll', done => {
     let mockRequest = { body: utils.deepCopy(VALID_VOTE_REQUEST_BODY) };
     mockRequest.body.context.optionKey = TEST_OPTION_KEY2;
 
@@ -163,7 +165,8 @@ describe('slashVote', () => {
       expect(updatedOptions.voteCount).toBe(1);
     });
     let newVoteSetMock = jest.fn();
-    let refMock = jest.fn(location => {
+
+    refMock = jest.fn(location => {
       if (location === `/polls/${TEST_POLL_KEY}`) {
         return { once: jest.fn(eventName => {
             const snapshotMock = { val: jest.fn(() => TEST_ACTIVE_POLL) };
@@ -177,7 +180,6 @@ describe('slashVote', () => {
         return { transaction: incrementTransactionMock };
       }
     });
-    admin.database = jest.fn(() => ({ ref: refMock }));
 
     const mockResponse = { set: jest.fn(), status: code => {
         expect(code).toEqual(200);

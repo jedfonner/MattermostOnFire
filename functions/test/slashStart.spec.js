@@ -1,7 +1,7 @@
 'use strict'
 /* Imports and Mocks */
 let admin = require('firebase-admin');
-const functions = require('firebase-functions');
+const test = require('firebase-functions-test')();
 
 const {
   TEST_MM_INTEGRATION_TOKEN,
@@ -11,15 +11,11 @@ const {
   VALID_START_REQUEST_BODY
 } = require('./sampleData');
 
-functions.config = jest.fn(() => ({
+test.mockConfig({
   mattermost: { token: TEST_MM_INTEGRATION_TOKEN },
-  functions: { baseurl: TEST_BASE_URL },
-  firebase: {
-    credential: admin.credential.applicationDefault(),
-    databaseURL: 'https://not-a-project.firebaseio.com',
-    storageBucket: 'not-a-project.appspot.com'
-  }
-}));
+  functions: { baseurl: TEST_BASE_URL }
+});
+
 const utils = require('../utils');
 const myFunctions = require('../index');
 
@@ -29,6 +25,17 @@ describe('slashStart', () => {
   let newOptionsRefMock;
   let newPollData;
   let options = [];
+
+  beforeAll(() => {
+    const databaseStub = jest.fn(() => {
+      return {
+        ref: refMock
+      };
+    });
+    // This can only be done once
+    Object.defineProperty(admin, "database", { get: () => databaseStub });
+  });
+
   beforeEach(() => {
     // Custom admin database mock for testing the slashStart function
     newOptionsRefMock = jest.fn(() => ({
@@ -67,10 +74,9 @@ describe('slashStart', () => {
     }));
 
     refMock = jest.fn(location => ({push: newPollRefMock}));
-    admin.database = jest.fn(() => ({ref: refMock}))
   });
 
-  test('missing token', done => {
+  it('Should check for a missing token', done => {
     let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     delete mockRequest.body.token;
     const mockResponse = {
@@ -88,7 +94,7 @@ describe('slashStart', () => {
     myFunctions.slashStart(mockRequest, mockResponse);
   });
 
-  test('invalid token', done => {
+  it('Should check for an invalid token', done => {
     let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     mockRequest.body.token = 'invalid token';
     const mockResponse = {
@@ -106,7 +112,7 @@ describe('slashStart', () => {
     myFunctions.slashStart(mockRequest, mockResponse);
   });
 
-  test('bad text', done => {
+  it('Should check for bad text', done => {
     let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     mockRequest.body.text = 'invalid text';
 
@@ -126,7 +132,7 @@ describe('slashStart', () => {
     myFunctions.slashStart(mockRequest, mockResponse);
   })
 
-  test('valid poll start', done => {
+  it('Should start a valid poll', done => {
     let mockRequest = { body: utils.deepCopy(VALID_START_REQUEST_BODY) };
     const mockResponse = {
       set: jest.fn(),
