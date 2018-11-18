@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`slashEnd bad token 1`] = `"Invalid request or missing token"`;
+exports[`slashCount Should check for a bad token 1`] = `"Invalid request or missing token"`;
 
-exports[`slashEnd insufficient permissions 1`] = `
+exports[`slashCount Should check for a missing token 1`] = `"Invalid request or missing token"`;
+
+exports[`slashCount Should check for insufficient permissions 1`] = `
 Object {
   "ephemeral_text": "Unable to get vote count for poll. Only the poll creator can get the vote count. Please ask @jed.fonner if you need the count.",
 }
 `;
 
-exports[`slashEnd missing token 1`] = `"Invalid request or missing token"`;
-
-exports[`slashEnd successful count 1`] = `
+exports[`slashCount Should perform a successful count 1`] = `
 Object {
   "ephemeral_text": "Current summary of poll \\"**Does this thing still work?**\\"
 
