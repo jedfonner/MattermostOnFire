@@ -5,13 +5,13 @@
     "note": "Do not update firebase-admin higher than v5.4.2 nor firebase-functions higher than v0.7.1 otherwise it will break the ability to mock the firebase.admin.database."
   },
   "dependencies": {
-    "firebase-admin": "^5.12.1",
-    "firebase-functions": "^1.1.0",
-    "i18next": "^10.6.0"
+    "firebase-admin": "^6.1.0",
+    "firebase-functions": "^2.1.0",
+    "i18next": "^12.0.0"
   },
   "private": true,
   "devDependencies": {
-    "jest": "^21.2.1"
+    "jest": "^23.6.0"
   },
   "scripts": {
     "test": "jest; exit 0",
